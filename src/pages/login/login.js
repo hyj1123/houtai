@@ -2,14 +2,47 @@
  * Created by Administrator on 2017/10/31.
  */
 import  Vue from 'vue'
+import ElementUI from 'element-ui'
+import Row  from 'Row'
+import Col  from 'Col'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(Vue),
+Vue.use(ElementUI),
+Vue.use(Row),
+Vue.use(Col),
 new Vue({
   el: "#app",
+  data:{
+    name:'',
+    password:''
+  },
   template: `<div>
-    <input type="text" placeholder="用户名">
-    <input type="password" placeholder="密码">
-    <button @click="register">提交</button>
+    <!--<input type="text" placeholder="用户名">-->
+    <!--<input type="password" placeholder="密码">-->
+    <!--<button @click="register">提交</button>-->
+    <el-row>
+      <el-col :span="8">
+        <el-input id="name" v-model="name" placeholder="请输入账号">
+          <template slot="prepend">账号</template>
+        </el-input>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+        <el-input id="password" v-model="password" type="password" placeholder="请输入密码">
+          <template slot="prepend">密码</template>
+        </el-input>
+       </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+        <el-button id="login" v-on:click="check" style="width:100%" type="primary">登录</el-button>
+      </el-col>
+    </el-row>
   </div>`,
   methods: {
+
+
     register() {
       let routes = [
         {
@@ -20,7 +53,7 @@ new Vue({
           children: [
             {
               path: 'wxMenu',
-              show: true,
+              show: false,
               title: '微信菜单',
             },
             {
@@ -195,6 +228,7 @@ new Vue({
           ]
         }
       ];
+
       /* 过滤路由，把要显示了路由存储（权限管理） */
       for(let i=0;i<routes.length;i++) {
         if(routes[i].show) {

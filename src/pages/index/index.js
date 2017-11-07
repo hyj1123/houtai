@@ -35,7 +35,7 @@ if(localStorage.getItem('routes')) {
       }
     }
   });
-  console.log(firstRoutes);
+  console.log(   );
   /* 先排序，然后比较（比较好比较） */
   personalRoutes.sort();
   firstRoutes.sort();
@@ -47,10 +47,14 @@ if(localStorage.getItem('routes')) {
     for(let j=0;j<childrens.length;j++) {
       /* 利用对象访问第一级不会报错的特性 */
       if(personalRoutes[i].children[j]) {
+        //console.log(personalRoutes[i].children[j].title)
         if(!personalRoutes[i].children[j].show) {
+          //console.log(personalRoutes[i].children[j].title)
           /* 把对应的删除掉 */
           childrens.splice(j,1);
         }
+      }else {
+        childrens.splice(j,1);
       }
     }
   }
