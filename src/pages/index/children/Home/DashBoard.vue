@@ -1,6 +1,6 @@
 <template>
   <div>
-    首页面板
-    <el-input placeholder="1111"></el-input>
+    <!--<img src="../../image/bg.png" style="width: 1000px;height: 500px"/>-->
+    <img src="../../../../image/bg.png" style="width: 1670px;height: 700px;margin-top: -15px;"/>
   </div>
 </template>

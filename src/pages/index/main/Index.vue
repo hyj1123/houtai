@@ -1,8 +1,19 @@
 <template>
   <el-container>
-    <el-header>头部</el-header>
+    <el-header>
+      <div class="header">
+        <el-menu default-active="1" class="el-menu-demo header-bar" mode="horizontal"  >
+          <!--<el-menu-item class="logo" index="1" id="shouye"><a href="../../home/dashBoard.vue">爱的后台管理系统</a></el-menu-item>-->
+          <el-menu-item class="logo" index="1" id="shouye"><router-link to="/home/dashBoard">爱的后台管理系统</router-link></el-menu-item>
+          <el-submenu class="userBtn" index="2">
+            <template slot="title" >admin</template>
+            <el-menu-item index="2-1"><a href="../login.html">退出登录</a></el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </div>
+    </el-header>
     <el-container>
-      <el-aside width="201px">
+      <el-aside width="234px">
         <el-menu
           :default-active="activeNav"
           background-color="#545c64"
@@ -15,7 +26,7 @@
               <i class="iconfont" :class="item.icon"></i>
               <span>{{ item.title }}</span>
             </template>
-            <el-menu-item v-for="ite in item.children" :key="ite.path" :index="ite.path" @click.native="addTab(`/${item.path}/${ite.path}`,ite.title)">
+            <el-menu-item v-for="ite in item.children" v-show="!ite.hidden" :key="ite.path" :index="ite.path" @click.native="routeTo({route: `/${item.path}/${ite.path}`,title: ite.title})">
               <i class="el-icon-menu"></i>
               <span slot="title">{{ ite.title }}</span>
             </el-menu-item>
@@ -40,60 +51,27 @@
 </template>
 
 <script>
+  import { mapState,mapMutations } from 'vuex'
   export default {
     data() {
       return {
-        activeNav: 'dashBoard',
-        newRoutes: [],
-        rightRoutes: [],// 保存路由和title
-        rightRoutesArr: ['/home/dashBoard'],// 只保存路由,用来判断是否已经存在,默认首页已经开启
-        rightRoutesActive: '/home/dashBoard'
+        newRoutes: []
       }
     },
     methods: {
-      addTab(route,title) {
-        this.$router.push({
-          path: route,
-          query: {}
-        });
-        /* 判断右边路由标签有没有 */
-        if(this.rightRoutesArr.indexOf(route)!=-1) {
-          /* 已存在，直接active */
-          this.rightRoutesActive = route;
-        }else {
-          this.rightRoutesArr.push(route);
-          this.rightRoutesActive = route;// 第一次设置，为了active
-          this.rightRoutes.push({
-            title: title,
-            name: route
-          })
-        }
+      ...mapMutations(['addTab']),
+      routeTo(routeInfo) {
+        this.$router.push(routeInfo.route);
+        this.addTab(routeInfo);
       },
       clickTab(tab) {
-        this.activeNav = tab.name.split('/')[2];
         this.$router.push({
           path: tab.name
         });
       },
       removeTab(a) {
-        /* a为路由信息（tab的name） */
-        if(a == '/home/dashBoard') {
-          this.$message({
-            showClose: true,
-            message: '首页不允许关闭',
-            type: 'warning'
-          });
-        }else {
-          let index = this.rightRoutesArr.indexOf(a);
-          this.rightRoutesArr.splice(index,1);// arr因为默认有一个首页路由
-          this.rightRoutes.splice(index-1,1);// 而rightRoutes只保存了点击添加的路由，并没有首页，所以要减去1
-          /* 判断关闭的是否是active */
-          if(this.rightRoutesActive == a) {
-            /* 如果关闭的是处于active的，则让arr最后一个变成active */
-            this.rightRoutesActive = this.rightRoutesArr[this.rightRoutesArr.length-1];
-            this.$router.push(this.rightRoutesArr[this.rightRoutesArr.length-1]);
-          }
-        }
+        this.$store.commit('removeTab',a);
+        this.$router.push(this.$store.state.rightRoutesArr[this.$store.state.rightRoutesArr.length-1]);
       }
     },
     created() {
@@ -102,13 +80,33 @@
       this.newRoutes = JSON.parse(newRoutes);
       /* 第一次应该路由加载的是 */
       this.$router.push('/home/dashBoard');
+    },
+    computed: {
+      ...mapState(['num','rightRoutes','rightRoutesArr']),
+      rightRoutesActive: {
+        get() {
+          return this.$store.state.rightRoutesActive;
+        },
+        set(newValue) {
+          this.activeRouter = newValue;
+          this.$store.commit('changeRightRoutesActive',newValue)
+        }
+      },
+      activeNav: {
+        get() {
+          return this.$store.state.activeNav;
+        },
+        set(newValue) {
+          this.$store.commit('changeActiveNav',newValue);
+        }
+      }
     }
   }
 </script>
 
 <style>
   .el-tabs__header {
-    background: #f5f5f5;
+    background: #f9f9f9;
   }
   .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
     border-bottom-color: silver;
@@ -124,5 +122,27 @@
   }
   .iconfont {
     color: #f5f5f5 !important;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .header-bar {
+    background: #545c64;
+  }
+  .userBtn {
+    float: right !important;
+  }
+  .logo {
+    font-size: 18px;
+  }
+  .logo a{
+    text-decoration: none;
+  }
+  #shouye{
+    width: 235px;
   }
 </style>

@@ -153,16 +153,23 @@ require('echarts/lib/component/title')
 
 import './assets/css/reset.css'
 import './assets/iconfont/iconfont.css'
+//import "bootstrap/dist/js/bootstrap.min.js"
+import "bootstrap/dist/css/bootstrap.min.css"
 
 import Router from 'vue-router'
 Vue.use(Router)
 import routes from './router'
 
+import store from './store'
+
+import axios from 'axios'
+Vue.prototype.$http = axios
+
+
 Vue.config.productionTip = false
 
 /* 判断是否登录过 */
 if(localStorage.getItem('routes')) {
-  alert('拿到权限');
   let personalRoutes = localStorage.getItem('routes');
   personalRoutes = JSON.parse(personalRoutes);
   /* 筛选第一级 */
@@ -227,6 +234,7 @@ if(localStorage.getItem('routes')) {
   new Vue({
     el: '#app',
     router,
+    store,
     template: '<App/>',
     components: { App }
   });

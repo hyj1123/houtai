@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aaa">
     <mavonEditor v-model="val"></mavonEditor>
   </div>
 </template>
@@ -18,3 +18,7 @@
     }
   }
 </script>
+
+<style>
+
+</style>

@@ -1,10 +1,13 @@
-# demo
+# 项目
 
-> 物流权限
+> eyed
 
 ## Build Setup
 
 ``` bash
+# install dependencies
+npm install
+
 # install dependencies
 npm install
 
